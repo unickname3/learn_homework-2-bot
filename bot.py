@@ -17,7 +17,7 @@ from datetime import date
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
-import local_settings
+import settings
 
 logging.basicConfig(
     format="%(name)s - %(levelname)s - %(message)s",
@@ -71,7 +71,7 @@ def planet_where(update, context):
 
 
 def main():
-    mybot = Updater(local_settings.API_KEY, use_context=True)
+    mybot = Updater(settings.API_KEY, use_context=True)
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
