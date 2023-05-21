@@ -30,6 +30,9 @@ logging.basicConfig(
 locale.setlocale(locale.LC_ALL, "russian")
 
 
+# --------------- HANDLERS -------------------------------
+
+
 def greet_user(update, context):
     text = "Вызван /start"
     print(text)
@@ -121,6 +124,9 @@ def guess_number(update, context):
         reply = "Введите число"
 
     update.message.reply_text(reply)
+
+
+# ----------------- MAIN -----------------------------------
 
 
 def main():
