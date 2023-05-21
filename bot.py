@@ -95,14 +95,12 @@ def wordcount(update, context):
 
 
 def next_full_moon(update, context):
-    user_text = update.message.text
-
-    comand, *date_str = user_text.split(None, 1)
+    date_str = " ".join(context.args)
 
     if not date_str:
         date_from = date.today()
     else:
-        date_from = parse(date_str[0], dayfirst=True)
+        date_from = parse(date_str, dayfirst=True)
 
     full_moon = ephem.next_full_moon(date_from)
     full_moon_string = full_moon.datetime().strftime("%d %B %Y")
