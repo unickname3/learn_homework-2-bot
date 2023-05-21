@@ -53,12 +53,18 @@ def greet_user(update, context):
 
 
 def talk_to_me(update, context):
+    """
+    Echo
+    """
     user_text = update.message.text
     print(user_text)
     update.message.reply_text(user_text)
 
 
 def planet_where(update, context):
+    """
+    In which constellation users planet today?
+    """
     user_text = update.message.text
     try:
         planet = user_text.split()[1].capitalize()
@@ -91,6 +97,9 @@ def planet_where(update, context):
 
 
 def wordcount(update, context):
+    """
+    Count number of word in users message
+    """
     user_text = update.message.text.strip()
 
     words = user_text.split()
@@ -111,6 +120,9 @@ def wordcount(update, context):
 
 
 def next_full_moon(update, context):
+    """
+    When next full moon after date which user send (or after today if not)
+    """
     date_str = " ".join(context.args)
 
     if not date_str:
@@ -127,6 +139,9 @@ def next_full_moon(update, context):
 
 
 def guess_number(update, context):
+    """
+    Play random numbers game with user
+    """
     if context.args:
         try:
             user_number = int(context.args[0])
@@ -140,6 +155,9 @@ def guess_number(update, context):
 
 
 def send_mem(update, context):
+    """
+    Send to chat random images from folder 'images\\'
+    """
     mem_files_list = glob("images\*.jp*g")
     mem_filename = random.choice(mem_files_list)
     chat_id = update.effective_chat.id
