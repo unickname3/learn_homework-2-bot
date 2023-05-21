@@ -16,6 +16,7 @@ import logging
 from datetime import date
 import locale
 import random
+from glob import glob
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
@@ -48,7 +49,6 @@ def play_random_numbers(user_number):
 
 def greet_user(update, context):
     text = "Вызван /start"
-    print(text)
     update.message.reply_text(text)
 
 
@@ -139,6 +139,13 @@ def guess_number(update, context):
     update.message.reply_text(reply)
 
 
+def send_mem(update, context):
+    mem_files_list = glob("images\*.jp*g")
+    mem_filename = random.choice(mem_files_list)
+    chat_id = update.effective_chat.id
+    context.bot.send_photo(chat_id=chat_id, photo=open(mem_filename, "rb"))
+
+
 # ----------------- MAIN -----------------------------------
 
 
@@ -152,6 +159,7 @@ def main():
     dp.add_handler(CommandHandler("wordcount", wordcount))
     dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
     dp.add_handler(CommandHandler("guess", guess_number))
+    dp.add_handler(CommandHandler("mem", send_mem))
 
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
