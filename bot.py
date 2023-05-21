@@ -14,11 +14,13 @@
 """
 import logging
 from datetime import date
-from dateutil.parser import parse
 import locale
+import random
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
+from dateutil.parser import parse
+
 import settings
 
 logging.basicConfig(
@@ -28,6 +30,17 @@ logging.basicConfig(
 )
 
 locale.setlocale(locale.LC_ALL, "russian")
+
+
+def play_random_numbers(user_number):
+    bot_number = random.randint(user_number - 10, user_number + 10)
+    if user_number > bot_number:
+        reply = f"Ваше число: {user_number}, моё число: {bot_number}. Вы выиграли."
+    elif user_number == bot_number:
+        reply = f"Ваше число: {user_number}, моё число: {bot_number}. Ничья."
+    else:
+        reply = f"Ваше число: {user_number}, моё число: {bot_number}. Вы проиграли."
+    return reply
 
 
 # --------------- HANDLERS -------------------------------
@@ -116,8 +129,8 @@ def next_full_moon(update, context):
 def guess_number(update, context):
     if context.args:
         try:
-            number = int(context.args[0])
-            reply = f"Ваше число {number}."
+            user_number = int(context.args[0])
+            reply = play_random_numbers(user_number)
         except (TypeError, ValueError):
             reply = "Введите целое число."
     else:
@@ -133,6 +146,7 @@ def main():
     mybot = Updater(settings.API_KEY, use_context=True)
 
     dp = mybot.dispatcher
+
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("planet", planet_where))
     dp.add_handler(CommandHandler("wordcount", wordcount))
