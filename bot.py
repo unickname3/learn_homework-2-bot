@@ -70,12 +70,33 @@ def planet_where(update, context):
     update.message.reply_text(reply)
 
 
+def wordcount(update, context):
+    user_text = update.message.text.strip()
+
+    words = user_text.split()
+
+    if len(words) == 1:
+        reply = "Не обнаружено текста для подсчёта слов!"
+        update.message.reply_text(reply)
+        return
+
+    word_count = 0
+    for word in words[1:]:
+        is_word = any(letter.isalpha() for letter in word)
+        if is_word:
+            word_count += 1
+
+    reply = f"Найдено {word_count} слова."
+    update.message.reply_text(reply)
+
+
 def main():
     mybot = Updater(settings.API_KEY, use_context=True)
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("planet", planet_where))
+    dp.add_handler(CommandHandler("wordcount", wordcount))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
     mybot.start_polling()
