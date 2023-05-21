@@ -110,6 +110,19 @@ def next_full_moon(update, context):
     update.message.reply_text(reply)
 
 
+def guess_number(update, context):
+    if context.args:
+        try:
+            number = int(context.args[0])
+            reply = f"Ваше число {number}."
+        except (TypeError, ValueError):
+            reply = "Введите целое число."
+    else:
+        reply = "Введите число"
+
+    update.message.reply_text(reply)
+
+
 def main():
     mybot = Updater(settings.API_KEY, use_context=True)
 
@@ -118,6 +131,8 @@ def main():
     dp.add_handler(CommandHandler("planet", planet_where))
     dp.add_handler(CommandHandler("wordcount", wordcount))
     dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
+    dp.add_handler(CommandHandler("guess", guess_number))
+
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
     mybot.start_polling()
