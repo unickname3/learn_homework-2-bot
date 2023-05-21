@@ -14,6 +14,8 @@
 """
 import logging
 from datetime import date
+from dateutil.parser import parse
+import locale
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
@@ -24,6 +26,8 @@ logging.basicConfig(
     level=logging.INFO,
     filename="bot.log",
 )
+
+locale.setlocale(locale.LC_ALL, "russian")
 
 
 def greet_user(update, context):
@@ -90,6 +94,24 @@ def wordcount(update, context):
     update.message.reply_text(reply)
 
 
+def next_full_moon(update, context):
+    user_text = update.message.text
+
+    comand, *date_str = user_text.split(None, 1)
+
+    if not date_str:
+        date_from = date.today()
+    else:
+        date_from = parse(date_str[0], dayfirst=True)
+
+    full_moon = ephem.next_full_moon(date_from)
+    full_moon_string = full_moon.datetime().strftime("%d %B %Y")
+
+    reply = f"Следующее затмение будет {full_moon_string}."
+
+    update.message.reply_text(reply)
+
+
 def main():
     mybot = Updater(settings.API_KEY, use_context=True)
 
@@ -97,6 +119,7 @@ def main():
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("planet", planet_where))
     dp.add_handler(CommandHandler("wordcount", wordcount))
+    dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
     mybot.start_polling()
