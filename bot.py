@@ -15,8 +15,6 @@
 import logging
 from datetime import date
 import locale
-import random
-from glob import glob
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ephem
@@ -30,7 +28,7 @@ logging.basicConfig(
     filename="bot.log",
 )
 
-locale.setlocale(locale.LC_ALL, "russian")
+locale.setlocale(locale.LC_ALL, ("ru_RU", "UTF-8"))
 
 
 def play_random_numbers(user_number):
@@ -138,32 +136,6 @@ def next_full_moon(update, context):
     update.message.reply_text(reply)
 
 
-def guess_number(update, context):
-    """
-    Play random numbers game with user
-    """
-    if context.args:
-        try:
-            user_number = int(context.args[0])
-            reply = play_random_numbers(user_number)
-        except (TypeError, ValueError):
-            reply = "Введите целое число."
-    else:
-        reply = "Введите число"
-
-    update.message.reply_text(reply)
-
-
-def send_mem(update, context):
-    """
-    Send to chat random images from folder 'images\\'
-    """
-    mem_files_list = glob("images\*.jp*g")
-    mem_filename = random.choice(mem_files_list)
-    chat_id = update.effective_chat.id
-    context.bot.send_photo(chat_id=chat_id, photo=open(mem_filename, "rb"))
-
-
 # ----------------- MAIN -----------------------------------
 
 
@@ -176,8 +148,6 @@ def main():
     dp.add_handler(CommandHandler("planet", planet_where))
     dp.add_handler(CommandHandler("wordcount", wordcount))
     dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
-    dp.add_handler(CommandHandler("guess", guess_number))
-    dp.add_handler(CommandHandler("mem", send_mem))
 
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
