@@ -3,12 +3,16 @@
 
 class CitiesSession:
     def __init__(self):
-        self.cities_dict = {}
         self.used_cities = set()
-        self.lack_letters = set()
-        self.all_cities = set()
         self.letter_for_user = ""
-        self._load_cities_from_file()
+
+        self.cities_dict = self._load_cities_from_file()
+
+        self.lack_letters = (
+            set([chr(k) for k in range(ord("А"), ord("Я") + 1)])
+            - self.cities_dict.keys()
+        )
+        self.all_cities = set.union(*self.cities_dict.values())
 
     def _load_cities_from_file(self):
         with open("txt-cities-russia.txt", "r", encoding="utf-8") as input_file:
@@ -17,16 +21,9 @@ class CitiesSession:
                 city = line.strip().capitalize()
                 cities.setdefault(city[0], set())
                 cities[city[0]].add(city)
-
-        self.lack_letters = (
-            set([chr(k) for k in range(ord("А"), ord("Я") + 1)]) - cities.keys()
-        )
-        print(self.lack_letters)
-        self.cities_dict = cities
-        self.all_cities = set.union(*cities.values())
+        return cities
 
     def answer(self, user_city: str) -> str:
-        # TODO: Порефакторить этот метод
         user_city = user_city.capitalize()
 
         if user_city in self.used_cities:
@@ -77,3 +74,4 @@ if __name__ == "__main__":
     for city in test_cities:
         print(f"Me > {city}")
         print(f"Bot> {cities_game.answer(city)}")
+        print(cities_game.used_cities)

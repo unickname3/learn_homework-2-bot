@@ -110,12 +110,13 @@ def next_full_moon(update, context):
 
 
 def cities(update, context):
-    # TODO: Разобраться с сохранением городов в контексте
+    print(context.user_data)
     if not context.args:
         reply = "Введите название города в России"
         update.message.reply_text(reply)
+        return
 
-    if "city_game" not in context.user_data.keys():
+    if "cities_game" not in context.user_data.keys():
         context.user_data["cities_game"] = CitiesSession()
 
     user_city = "".join(context.args).strip()
