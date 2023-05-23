@@ -1,17 +1,3 @@
-"""
-Домашнее задание №1
-
-Использование библиотек: ephem
-
-* Установите модуль ephem
-* Добавьте в бота команду /planet, которая будет принимать на вход
-  название планеты на английском, например /planet Mars
-* В функции-обработчике команды из update.message.text получите
-  название планеты (подсказка: используйте .split())
-* При помощи условного оператора if и ephem.constellation научите
-  бота отвечать, в каком созвездии сегодня находится планета.
-
-"""
 import logging
 from datetime import date
 import locale
@@ -21,7 +7,7 @@ import ephem
 from dateutil.parser import parse
 
 import settings
-from cities_game import Cities_Session
+from cities_game import CitiesSession
 
 logging.basicConfig(
     format="%(name)s - %(levelname)s - %(message)s",
@@ -30,20 +16,6 @@ logging.basicConfig(
 )
 
 locale.setlocale(locale.LC_ALL, ("ru_RU", "UTF-8"))
-
-
-def play_random_numbers(user_number):
-    bot_number = random.randint(user_number - 10, user_number + 10)
-    if user_number > bot_number:
-        reply = f"Ваше число: {user_number}, моё число: {bot_number}. Вы выиграли."
-    elif user_number == bot_number:
-        reply = f"Ваше число: {user_number}, моё число: {bot_number}. Ничья."
-    else:
-        reply = f"Ваше число: {user_number}, моё число: {bot_number}. Вы проиграли."
-    return reply
-
-
-# --------------- HANDLERS -------------------------------
 
 
 def greet_user(update, context):
@@ -138,18 +110,17 @@ def next_full_moon(update, context):
 
 
 def cities(update, context):
+    # TODO: Разобраться с сохранением городов в контексте
     if not context.args:
-        reply = "ПРАВИЛА"  # TODO: Добавить правила игры
-        # TODO: Вписать завершение вызова
+        reply = "Введите название города в России"
+        update.message.reply_text(reply)
 
     if "city_game" not in context.user_data.keys():
         context.user_data["cities_game"] = CitiesSession()
 
-    reply = context.user_data["cities_game"].answer()
-    # TODO: Вписать завершение вызова
-
-
-# ----------------- MAIN -----------------------------------
+    user_city = "".join(context.args).strip()
+    reply = context.user_data["cities_game"].answer(user_city)
+    update.message.reply_text(reply)
 
 
 def main():
