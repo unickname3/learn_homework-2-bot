@@ -21,6 +21,7 @@ import ephem
 from dateutil.parser import parse
 
 import settings
+from cities_game import Cities_Session
 
 logging.basicConfig(
     format="%(name)s - %(levelname)s - %(message)s",
@@ -136,6 +137,18 @@ def next_full_moon(update, context):
     update.message.reply_text(reply)
 
 
+def cities(update, context):
+    if not context.args:
+        reply = "ПРАВИЛА"  # TODO: Добавить правила игры
+        # TODO: Вписать завершение вызова
+
+    if "city_game" not in context.user_data.keys():
+        context.user_data["cities_game"] = CitiesSession()
+
+    reply = context.user_data["cities_game"].answer()
+    # TODO: Вписать завершение вызова
+
+
 # ----------------- MAIN -----------------------------------
 
 
@@ -148,6 +161,7 @@ def main():
     dp.add_handler(CommandHandler("planet", planet_where))
     dp.add_handler(CommandHandler("wordcount", wordcount))
     dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
+    dp.add_handler(CommandHandler("cities", cities))
 
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
