@@ -8,6 +8,7 @@ from dateutil.parser import parse
 
 import settings
 from cities_game import CitiesSession
+import calculator
 
 logging.basicConfig(
     format="%(name)s - %(levelname)s - %(message)s",
@@ -124,6 +125,12 @@ def cities(update, context):
     update.message.reply_text(reply)
 
 
+def calc(update, context):
+    expression = "".join(context.args)
+    reply = calculator.calculate(expression)
+    update.message.reply_text(reply)
+
+
 def main():
     mybot = Updater(settings.API_KEY, use_context=True)
 
@@ -134,6 +141,7 @@ def main():
     dp.add_handler(CommandHandler("wordcount", wordcount))
     dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
     dp.add_handler(CommandHandler("cities", cities))
+    dp.add_handler(CommandHandler("calc", calc))
 
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
